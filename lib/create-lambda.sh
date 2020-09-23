@@ -27,10 +27,10 @@ remoteConfig=$(aws lambda get-function-configuration --function-name $STAGE_NAME
 remoteVariables=$(echo $remoteConfig | jq -r --arg remoteConfig "$remoteConfig" '.Environment')
 # replace account number with generic localstack account
 remoteVariables=$(echo $remoteVariables | sed -e 's/[[:digit:]]\{12\}/000000000000/g')
-# replace sqs domains with localstack localhost port
+# replace sqs domains with localstack localhost port and change region to what is relevant
 remoteVariables=$(echo $remoteVariables | sed -e 's|https://sqs.eu-west-1.amazonaws.com/000000000000|http://localhost:4576/queue|g')
 # replace environment host domain with local
-remoteVariables=$(echo $remoteVariables | sed -e 's|https://person.*uk|http://localhost|g')
+remoteVariables=$(echo $remoteVariables | sed -e 's|https://<host_name>.co.uk|http://localhost|g')
 # inject aws credentials into env vars for lambdas so they can call remote services (i.e. DynamoDB)
 addCredsToEnvsStringSed='s|Variables": {|Variables":{ "AWS_ACCESS_KEY": "'
 addCredsToEnvsStringSed+=$AWS_ACCESS_KEY
