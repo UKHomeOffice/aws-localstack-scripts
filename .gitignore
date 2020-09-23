@@ -1,0 +1,3 @@
+.localstack
+_*.json
+.DS_Store
